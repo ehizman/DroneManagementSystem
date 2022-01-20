@@ -21,7 +21,7 @@ public class DronesApplicationException extends RuntimeException implements Dron
 
     public DronesApplicationException(final DroneApplicationExceptionReason reason) {
         this.code = reason.getCode();
-        this.message = reason.getMessage().;
+        this.message = reason.getMessage();
         this.httpStatus = reason.getHttpStatus();
     }
 }
