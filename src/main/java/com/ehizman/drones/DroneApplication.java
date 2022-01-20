@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @Slf4j
-public class DronesApplication {
+public class DroneApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DronesApplication.class, args);
+        SpringApplication.run(DroneApplication.class, args);
     }
 }

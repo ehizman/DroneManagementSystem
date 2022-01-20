@@ -15,7 +15,7 @@ public class Validation {
         if (drone.getBatteryCapacity() == null){
             throw new DronesApplicationException(DroneApplicationExceptionReason.INVALID_DRONE_REGISTRATION_DETAILS);
         }
-        if (drone.getWeight() == null){
+        if (drone.getWeight() == null || drone.getWeight() > 500.0){
             throw new DronesApplicationException(DroneApplicationExceptionReason.INVALID_DRONE_REGISTRATION_DETAILS);
         }
     }

@@ -4,10 +4,7 @@ import com.ehizman.drones.data.model.enums.State;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "drones")
@@ -28,9 +25,12 @@ public class Drone {
 
     @Column(nullable = false)
     @NotNull
+    @Max(value = 500)
+    @Min(value = 0)
     private Double weight;
 
-    @Max(100)
+    @Max(value = 100)
+    @Min(value = 0)
     @Column(nullable = false)
     @NotNull
     private Integer batteryCapacity;

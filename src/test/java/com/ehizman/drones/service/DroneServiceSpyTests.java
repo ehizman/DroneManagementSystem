@@ -32,12 +32,51 @@ public class DroneServiceSpyTests {
     }
 
     @Test
-    @Rollback(value = false)
     void validateDrone(){
         DroneRegistrationDto droneRegistrationDto = DroneRegistrationDto.builder()
                 .batteryCapacity(20)
                 .serialNumber("1232567890")
                 .weight(100.0).build();
+        assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
+    }
+
+    @Test
+    void testThrowsExceptionWhenDroneIsLoadedBeyondFiveHundredGrams(){
+        DroneRegistrationDto droneRegistrationDto = DroneRegistrationDto.builder()
+                .batteryCapacity(20)
+                .serialNumber("1232567890")
+                .weight(600.0)
+                .build();
+        assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
+    }
+
+    @Test
+    void testThrowsExceptionWhenDroneWeightIsBelowZeroGrams(){
+        DroneRegistrationDto droneRegistrationDto = DroneRegistrationDto.builder()
+                .batteryCapacity(20)
+                .serialNumber("1232567890")
+                .weight(-90.0)
+                .build();
+        assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
+    }
+
+    @Test
+    void testThrowsExceptionWhenDroneBatteryCapacityIsBelowZero(){
+        DroneRegistrationDto droneRegistrationDto = DroneRegistrationDto.builder()
+                .batteryCapacity(-10)
+                .serialNumber("1232567890")
+                .weight(500.0)
+                .build();
+        assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
+    }
+
+    @Test
+    void testThrowsExceptionWhenDroneBatteryCapacityIsAboveOneHundred(){
+        DroneRegistrationDto droneRegistrationDto = DroneRegistrationDto.builder()
+                .batteryCapacity(103)
+                .serialNumber("1232567890")
+                .weight(500.0)
+                .build();
         assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
     }
 }
