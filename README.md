@@ -5,6 +5,7 @@
 [//]: # ([![Build Status]&#40;https://travis-ci.org/codecentric/springboot-sample-app.svg?branch=master&#41;]&#40;https://travis-ci.org/codecentric/springboot-sample-app&#41;)
 [//]: # ([![Coverage Status]&#40;https://coveralls.io/repos/github/codecentric/springboot-sample-app/badge.svg?branch=master&#41;]&#40;https://coveralls.io/github/codecentric/springboot-sample-app?branch=master&#41;)
 [//]: # ([![License]&#40;http://img.shields.io/:license-apache-blue.svg&#41;]&#40;http://www.apache.org/licenses/LICENSE-2.0.html&#41;)
+[Postman Documentation](https://documenter.getpostman.com/view/16202798/UVXokDje])
 
 A Drone Management Rest Service built using Springboot Global Exception Handling Mechanism as described and implemented by [George Berar](https://medium.com/@georgeberar.contact/springboot-standardized-api-exception-handling-f31510861350).
 Built using H2 in- memory database.
@@ -36,6 +37,7 @@ mvn spring-boot:run
 - MapStruct
 - Hamcrest
 - AssertJ
+- Spring DevTools
 
 [//]: # (## Deploying the application to OpenShift)
 
