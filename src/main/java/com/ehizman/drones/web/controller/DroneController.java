@@ -1,10 +1,17 @@
 package com.ehizman.drones.web.controller;
 
+import com.ehizman.drones.data.model.Drone;
+import com.ehizman.drones.data.model.Medication;
 import com.ehizman.drones.dto.DroneRegistrationDto;
 import com.ehizman.drones.dto.DroneResponseDto;
+import com.ehizman.drones.dto.MedicationRequestDto;
+import com.ehizman.drones.dto.MedicationResponseDto;
+import com.ehizman.drones.dto.mapper.MedicationMapper;
 import com.ehizman.drones.exceptions.DronesApplicationException;
 import com.ehizman.drones.service.DroneService;
+import com.ehizman.drones.service.MedicationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @RestController
@@ -19,10 +27,13 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Validated
 public class DroneController {
-    private DroneService droneService;
+    private final DroneService droneService;
+    private final MedicationMapper medicationMapper;
 
-    public DroneController(DroneService droneService) {
+
+    public DroneController(DroneService droneService, MedicationMapper medicationMapper) {
         this.droneService = droneService;
+        this.medicationMapper = medicationMapper;
     }
 
     @PostMapping(value = "/new-drone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,6 +42,18 @@ public class DroneController {
         log.info("Request --> {}", droneRegistrationDto);
         DroneResponseDto savedDrone= droneService.register(droneRegistrationDto);
         log.info("Saved drone --> {}", savedDrone);
-        return new ResponseEntity<>(savedDrone, HttpStatus.OK);
+        return new ResponseEntity<>(savedDrone, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/load-drone/{serialNumber}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> loadDrone(@Valid @RequestBody @NotNull MedicationRequestDto medicationRequestDto,
+                                       @NotNull @NotBlank @PathVariable(name = "serialNumber") String serialNumber){
+        Drone drone =droneService.findDrone(serialNumber);
+        log.info("Drone to load --> {}", drone);
+        log.info("Medication --> {}", medicationRequestDto);
+        Medication medication = medicationMapper.medicationRequestDtoToMedication(medicationRequestDto);
+        droneService.load(medication, drone);
+        return new ResponseEntity<>("Drone loaded", HttpStatus.OK);
     }
 }

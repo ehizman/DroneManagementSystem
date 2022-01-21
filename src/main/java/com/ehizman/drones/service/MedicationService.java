@@ -1,2 +1,4 @@
-package com.ehizman.drones.service;public class MedicationService {
+package com.ehizman.drones.service;
+
+public interface MedicationService {
 }

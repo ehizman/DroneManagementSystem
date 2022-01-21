@@ -1,2 +1,4 @@
-package com.ehizman.drones.dto;public class MedicationResponseDto {
+package com.ehizman.drones.dto;
+
+public class MedicationResponseDto {
 }

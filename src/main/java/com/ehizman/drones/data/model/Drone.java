@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Drone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +46,13 @@ public class Drone {
     @NotNull
     private State state = State.IDLE;
 
+
     @Override
     public String toString() {
         return "Drone{" +
-                "id=" + id +
-                ", serialNumber='" + serialNumber + '\'' +
-                ", batteryCapacity=" + batteryCapacity +
+                "serialNumber='" + serialNumber + '\'' +
+                ", model=" + model +
+                ", state=" + state +
                 '}';
     }
 }
