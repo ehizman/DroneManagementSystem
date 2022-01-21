@@ -1,6 +1,7 @@
 package com.ehizman.drones.dto.mapper;
 
 import com.ehizman.drones.data.model.Drone;
+import com.ehizman.drones.data.model.Drone.DroneBuilder;
 import com.ehizman.drones.dto.DroneRegistrationDto;
 import com.ehizman.drones.dto.DroneResponseDto;
 import com.ehizman.drones.dto.DroneResponseDto.DroneResponseDtoBuilder;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-01-20T16:33:25+0100",
+    date = "2022-01-21T17:34:27+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Azul Systems, Inc.)"
 )
 @Component
@@ -21,14 +22,14 @@ public class DroneMapperImpl implements DroneMapper {
             return null;
         }
 
-        Drone drone = new Drone();
+        DroneBuilder drone = Drone.builder();
 
-        drone.setSerialNumber( droneRegistrationDto.getSerialNumber() );
-        drone.setWeight( droneRegistrationDto.getWeight() );
-        drone.setBatteryCapacity( droneRegistrationDto.getBatteryCapacity() );
-        drone.setModel( droneRegistrationDto.getModel() );
+        drone.serialNumber( droneRegistrationDto.getSerialNumber() );
+        drone.weight( droneRegistrationDto.getWeight() );
+        drone.batteryCapacity( droneRegistrationDto.getBatteryCapacity() );
+        drone.model( droneRegistrationDto.getModel() );
 
-        return drone;
+        return drone.build();
     }
 
     @Override
