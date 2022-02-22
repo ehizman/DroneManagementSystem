@@ -2,6 +2,7 @@ package com.ehizman.drones.service;
 
 import com.ehizman.drones.DataConfig;
 import com.ehizman.drones.data.model.Drone;
+import com.ehizman.drones.data.model.Medication;
 import com.ehizman.drones.data.model.enums.Model;
 import com.ehizman.drones.data.repository.DroneRepository;
 import com.ehizman.drones.dto.DroneRegistrationDto;
@@ -71,5 +72,36 @@ class DroneServiceImplTest {
                 .serialNumber("1232567890")
                 .weight(100.0).build();
         assertThrows(DronesApplicationException.class, ()-> droneService.register(droneRegistrationDto));
+    }
+
+    @Test
+    void testThrowsExceptionWhenDroneIsOverloaded(){
+        Medication medication = Medication.builder()
+                                            .name("Panadol")
+                                            .code("PAN45678")
+                                            .image("image")
+                                            .weight(500.00).build();
+        Drone drone = Drone.builder()
+                .batteryCapacity(50)
+                .serialNumber("1232567890")
+                .weight(240.0)
+                .model(Model.HEAVYWEIGHT).build();
+        assertThrows(DronesApplicationException.class, ()->droneService.load(medication, drone));
+    }
+
+    @Test
+    void testCanLoadDroneWithMedication(){
+        Medication medication = Medication.builder()
+                .name("Panadol")
+                .code("PAN45678")
+                .image("image")
+                .weight(50.00).build();
+        Drone drone = Drone.builder()
+                .batteryCapacity(50)
+                .serialNumber("1232567890")
+                .weight(240.0)
+                .model(Model.HEAVYWEIGHT).build();
+        droneService.load(medication, drone);
+
     }
 }

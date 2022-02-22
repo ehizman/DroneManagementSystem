@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "drones")
@@ -46,6 +47,24 @@ public class Drone {
     @NotNull
     private State state = State.IDLE;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "carrierDrone", orphanRemoval = true)
+    private Set<Medication> medicationBox;
+
+    public boolean addMedication(Medication medication){
+        medication.setCarrierDrone(this);
+        medicationBox.add(medication);
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return 2021;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Drone) obj).getId().equals(id);
+    }
 
     @Override
     public String toString() {

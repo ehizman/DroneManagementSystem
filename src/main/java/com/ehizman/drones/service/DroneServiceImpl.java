@@ -41,7 +41,6 @@ public class DroneServiceImpl implements DroneService {
         log.info("Drone to be saved --> {}", drone);
         Drone savedDrone = droneRepository.save(drone);
         log.info("Saved Drone --> {}", savedDrone);
-        DroneResponseDto responseDto = new DroneResponseDto();
         return droneMapper.droneToDroneResponseDto(savedDrone);
     }
 
@@ -52,5 +51,10 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public void load(Medication medication, Drone drone) {
+        if (medication.getWeight() > drone.getWeight()){
+            throw new DronesApplicationException(DroneApplicationExceptionReason.DRONE_OVERLOAD);
+        }
+        drone.setWeight(drone.getWeight()+medication.getWeight());
+        drone.addMedication(medication);
     }
 }

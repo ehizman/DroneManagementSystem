@@ -23,7 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping("drones/v1/")
+@RequestMapping("drones/api/v1/")
 @Slf4j
 @Validated
 public class DroneController {
