@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,8 +51,11 @@ public class Drone {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "carrierDrone", orphanRemoval = true)
     private Set<Medication> medicationBox;
 
-    public boolean addMedication(Medication medication){
+    public boolean addMedication(Medication medication) {
         medication.setCarrierDrone(this);
+        if (medicationBox == null) {
+            medicationBox = new HashSet<>();
+        }
         medicationBox.add(medication);
         return true;
     }

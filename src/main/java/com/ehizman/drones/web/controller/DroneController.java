@@ -11,7 +11,6 @@ import com.ehizman.drones.exceptions.DronesApplicationException;
 import com.ehizman.drones.service.DroneService;
 import com.ehizman.drones.service.MedicationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping("drones/api/v1/")
+@RequestMapping("dronesProject/api/v1/drones/")
 @Slf4j
 @Validated
 public class DroneController {

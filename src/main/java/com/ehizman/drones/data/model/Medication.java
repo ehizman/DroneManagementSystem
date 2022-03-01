@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 @Entity
-@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

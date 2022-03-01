@@ -1,6 +1,7 @@
 package com.ehizman.drones.dto;
 
 import com.ehizman.drones.data.model.enums.Model;
+import com.ehizman.drones.data.model.enums.State;
 import lombok.*;
 
 import javax.validation.constraints.Max;
@@ -25,4 +26,6 @@ public class DroneRegistrationDto {
     private Integer batteryCapacity;
     @NotNull
     private Model model;
+    @NotNull
+    private State state;
 }

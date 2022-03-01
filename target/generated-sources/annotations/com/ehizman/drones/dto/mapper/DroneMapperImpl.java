@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-02-21T02:14:05+0100",
+    date = "2022-02-27T17:58:11+0100",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Azul Systems, Inc.)"
 )
 @Component
@@ -28,6 +28,7 @@ public class DroneMapperImpl implements DroneMapper {
         drone.weight( droneRegistrationDto.getWeight() );
         drone.batteryCapacity( droneRegistrationDto.getBatteryCapacity() );
         drone.model( droneRegistrationDto.getModel() );
+        drone.state( droneRegistrationDto.getState() );
 
         return drone.build();
     }

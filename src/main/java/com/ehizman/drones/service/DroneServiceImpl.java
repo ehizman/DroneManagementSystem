@@ -2,6 +2,7 @@ package com.ehizman.drones.service;
 
 import com.ehizman.drones.data.model.Drone;
 import com.ehizman.drones.data.model.Medication;
+import com.ehizman.drones.data.model.enums.State;
 import com.ehizman.drones.data.repository.DroneRepository;
 import com.ehizman.drones.dto.DroneRegistrationDto;
 import com.ehizman.drones.dto.DroneResponseDto;
@@ -56,5 +57,15 @@ public class DroneServiceImpl implements DroneService {
         }
         drone.setWeight(drone.getWeight()+medication.getWeight());
         drone.addMedication(medication);
+        if (drone.getWeight() <= 500.0){
+            drone.setState(State.LOADING);
+        }
+        else{
+            if (drone.getWeight() == 500.0){
+                drone.setState(State.LOADED);
+            } else{
+                throw new DronesApplicationException(DroneApplicationExceptionReason.DRONE_OVERLOAD);
+            }
+        }
     }
 }

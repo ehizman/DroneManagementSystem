@@ -88,6 +88,13 @@ public class GlobalApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseDto);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Object> handleCustomUncaughtApplicationException(final IllegalArgumentException ex,
+                                                                           final ServletWebRequest request) {
+        log(ex, request);
+        final ErrorResponseDto errorResponseDto = build(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseDto);
+    }
     /**
      * Handles the uncaught {@link ConstraintViolationException} exceptions and returns a JSON formatted response.
      *
@@ -116,6 +123,8 @@ public class GlobalApiExceptionHandler extends ResponseEntityExceptionHandler {
                 }
             }
         });
+
+
 
         final ErrorResponseDto errorResponseDto = build(ConstraintViolationException.class.getSimpleName(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST, invalidParameters);

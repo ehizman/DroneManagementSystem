@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 
 
@@ -87,21 +88,5 @@ class DroneServiceImplTest {
                 .weight(240.0)
                 .model(Model.HEAVYWEIGHT).build();
         assertThrows(DronesApplicationException.class, ()->droneService.load(medication, drone));
-    }
-
-    @Test
-    void testCanLoadDroneWithMedication(){
-        Medication medication = Medication.builder()
-                .name("Panadol")
-                .code("PAN45678")
-                .image("image")
-                .weight(50.00).build();
-        Drone drone = Drone.builder()
-                .batteryCapacity(50)
-                .serialNumber("1232567890")
-                .weight(240.0)
-                .model(Model.HEAVYWEIGHT).build();
-        droneService.load(medication, drone);
-
     }
 }
