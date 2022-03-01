@@ -1,11 +1,9 @@
 package com.ehizman.drones.data.model;
-import com.ehizman.drones.data.model.enums.Authority;
-import com.ehizman.drones.data.model.enums.Type;
+import com.ehizman.drones.data.model.enums.Privileges;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,9 +16,20 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    private Type roleType;
+    private String name;
 
-    @Transient
-    private List<Authority> authorities;
+    @ManyToMany
+    private Set<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "roles_privileges",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "id"
+            )
+    )
+    private Set<Privileges> privileges;
 }

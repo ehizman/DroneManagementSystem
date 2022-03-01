@@ -2,7 +2,7 @@ package com.ehizman.drones.service;
 
 import com.ehizman.drones.data.model.Role;
 import com.ehizman.drones.data.model.User;
-import com.ehizman.drones.data.model.enums.Authority;
+import com.ehizman.drones.data.model.enums.Privileges;
 import com.ehizman.drones.data.model.enums.Type;
 import com.ehizman.drones.data.repository.RoleRepository;
 import com.ehizman.drones.data.repository.UserRepository;
@@ -23,8 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +50,7 @@ public class UserServiceImpl implements UserDetailsService, UserService{
         List<SimpleGrantedAuthority> authorities = getAuthorities(user.getRole().getAuthorities());
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
-    private List<SimpleGrantedAuthority> getAuthorities(List<Authority> authorities) {
+    private List<SimpleGrantedAuthority> getAuthorities(List<Privileges> authorities) {
         return authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.name()))
                 .collect(Collectors.toList());
@@ -68,8 +66,8 @@ public class UserServiceImpl implements UserDetailsService, UserService{
         }
         Role role = new Role();
         role.setRoleType(Type.USER);
-        List<Authority> authorities = new ArrayList<>();
-        authorities.add(Authority.LOAD_DRONE);
+        List<Privileges> authorities = new ArrayList<>();
+        authorities.add(Privileges.LOAD_DRONE);
         role.setAuthorities(authorities);
         roleRepository.save(role);
         user.setRole(role);
