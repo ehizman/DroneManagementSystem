@@ -1,4 +1,4 @@
-package com.ehizman.drones.data.model.enums;
+package com.ehizman.drones.data.model;
 
 
 import com.ehizman.drones.data.model.Role;
@@ -11,9 +11,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter
-public enum Privileges {
-    LOAD_DRONE("load drone"), DISPATCH_DRONE("dispatch a drone"), REGISTER_DRONE("register a new drone");
-
+public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,7 +21,7 @@ public enum Privileges {
     @ManyToMany(mappedBy = "privileges")
     private Set<Role> roles;
 
-    Privileges(String name) {
+    public Privilege(String name) {
         this.name = name;
     }
 }

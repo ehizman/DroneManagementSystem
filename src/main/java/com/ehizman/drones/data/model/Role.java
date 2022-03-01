@@ -1,12 +1,10 @@
 package com.ehizman.drones.data.model;
-import com.ehizman.drones.data.model.enums.Privileges;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -31,5 +29,9 @@ public class Role {
                     name = "privilege_id", referencedColumnName = "id"
             )
     )
-    private Set<Privileges> privileges;
+    private Set<Privilege> privileges;
+
+    public Role(String name) {
+        this.name = name;
+    }
 }
