@@ -38,25 +38,25 @@ public class Drone {
     @NotNull
     private Integer batteryCapacity;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     @NotNull
     private Model model;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     @NotNull
     private State state = State.IDLE;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "carrierDrone", orphanRemoval = true)
-    private Set<Medication> medicationBox;
+    private Set<Package> packageBoxes;
 
-    public boolean addMedication(Medication medication) {
-        medication.setCarrierDrone(this);
-        if (medicationBox == null) {
-            medicationBox = new HashSet<>();
+    public boolean addMedication(Package aPackage) {
+        aPackage.setCarrierDrone(this);
+        if (packageBoxes == null) {
+            packageBoxes = new HashSet<>();
         }
-        medicationBox.add(medication);
+        packageBoxes.add(aPackage);
         return true;
     }
 

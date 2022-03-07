@@ -2,7 +2,7 @@ package com.ehizman.drones.service;
 
 import com.ehizman.drones.DataConfig;
 import com.ehizman.drones.data.model.Drone;
-import com.ehizman.drones.data.model.Medication;
+import com.ehizman.drones.data.model.Package;
 import com.ehizman.drones.data.model.enums.Model;
 import com.ehizman.drones.data.repository.DroneRepository;
 import com.ehizman.drones.dto.DroneRegistrationDto;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 
 
@@ -77,7 +76,7 @@ class DroneServiceImplTest {
 
     @Test
     void testThrowsExceptionWhenDroneIsOverloaded(){
-        Medication medication = Medication.builder()
+        Package aPackage = com.ehizman.drones.data.model.Package.builder()
                                             .name("Panadol")
                                             .code("PAN45678")
                                             .image("image")
@@ -87,6 +86,6 @@ class DroneServiceImplTest {
                 .serialNumber("1232567890")
                 .weight(240.0)
                 .model(Model.HEAVYWEIGHT).build();
-        assertThrows(DronesApplicationException.class, ()->droneService.load(medication, drone));
+        assertThrows(DronesApplicationException.class, ()->droneService.load(aPackage, drone));
     }
 }

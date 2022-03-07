@@ -1,7 +1,7 @@
 package com.ehizman.drones.data.model;
 
 
-import com.ehizman.drones.data.model.Role;
+import com.ehizman.drones.data.model.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

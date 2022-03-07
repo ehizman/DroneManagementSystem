@@ -16,7 +16,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @Builder
-public class Medication {
+public class Package {
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$")
     private String name;
 
@@ -35,7 +35,7 @@ public class Medication {
 
     @Override
     public boolean equals(Object obj) {
-        return (code != null && ((Medication)obj).getCode().equals(code));
+        return (code != null && ((Package)obj).getCode().equals(code));
     }
 
     @Override

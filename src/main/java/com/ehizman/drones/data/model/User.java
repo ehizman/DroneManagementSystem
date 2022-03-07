@@ -1,5 +1,6 @@
 package com.ehizman.drones.data.model;
 
+import com.ehizman.drones.data.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@NamedEntityGraph(
+        name = "graph.userRole",
+        attributeNodes = @NamedAttributeNode("roles")
+)
 @Entity
 @Getter
 @Setter
@@ -37,7 +42,7 @@ public class User {
 
     private boolean tokenExpired;
 
-    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(mappedBy = "users", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
     @JoinTable(name = "user_role",
@@ -46,7 +51,7 @@ public class User {
     )
 
 
-    private void addRole(Role role){
+    public void addRole(Role role){
         roles.add(role);
     }
 
@@ -77,5 +82,9 @@ public class User {
                 ", enabled=" + enabled +
                 ", tokenExpired=" + tokenExpired +
                 '}';
+    }
+
+    public String getFullName() {
+        return String.format("%s %s", firstName, lastName);
     }
 }

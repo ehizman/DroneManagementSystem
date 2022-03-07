@@ -1,7 +1,6 @@
 package com.ehizman.drones.config;
 
 import com.ehizman.drones.data.model.Privilege;
-import com.ehizman.drones.data.model.Role;
 import com.ehizman.drones.data.model.User;
 import com.ehizman.drones.data.repository.PrivilegeRepository;
 import com.ehizman.drones.data.repository.RoleRepository;
@@ -49,15 +48,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElseThrow(()-> new DronesApplicationException(DroneApplicationExceptionReason.ROLE_NOT_FOUND));
-        User user = new User();
-        user.setEmail("drone_admin@testemail.com");
-        user.setFirstName("Test");
-        user.setLastName("Admin");
-        user.setPassword(passwordEncoder.encode("test"));
-        user.setRoles(Set.of(adminRole));
-        user.setEnabled(true);
-        userRepository.save(user);
-
+        User user = userRepository.findUserByEmail("drone_admin@testemail.com").orElse(null);
+        if (user == null){
+            user = new User();
+            user.setEmail("drone_admin@testemail.com");
+            user.setFirstName("Test");
+            user.setLastName("Admin");
+            user.setPassword(passwordEncoder.encode("test"));
+            user.setRoles(Set.of(adminRole));
+            user.setEnabled(true);
+            userRepository.save(user);
+        }
         alreadySetup = true;
     }
 

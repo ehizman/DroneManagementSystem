@@ -1,77 +1,82 @@
-//package com.ehizman.drones.service;
-//
-//import com.ehizman.drones.data.model.Role;
-//import com.ehizman.drones.data.model.User;
-//import com.ehizman.drones.data.model.Privilege;
-//import com.ehizman.drones.data.model.enums.Type;
-//import com.ehizman.drones.data.repository.RoleRepository;
-//import com.ehizman.drones.data.repository.UserRepository;
-//import com.ehizman.drones.dto.UserDto;
-//import com.ehizman.drones.dto.UserResponseDto;
-//import com.ehizman.drones.dto.mapper.UserMapper;
-//import com.ehizman.drones.exceptions.DroneApplicationExceptionReason;
-//import com.ehizman.drones.exceptions.DronesApplicationException;
-//import lombok.extern.slf4j.Slf4j;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import javax.transaction.Transactional;
-//import java.util.stream.Collectors;
-//
-//
-//@Slf4j
-//@Service
-//public class UserServiceImpl implements UserDetailsService, UserService{
-//    private final UserRepository userRepository;
-//    private final RoleRepository roleRepository;
-//    private final UserMapper userMapper;
-//    private final BCryptPasswordEncoder passwordEncoder;
-//
-//    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
-//        this.userRepository = userRepository;
-//        this.userMapper = userMapper;
-//        this.passwordEncoder = passwordEncoder;
-//        this.roleRepository = roleRepository;
-//    }
-//
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        User user = userRepository.findUserByEmail(email).orElse(null);
-//        if (user == null){
-//            throw new DronesApplicationException(DroneApplicationExceptionReason.USER_ACCOUNT_NOT_FOUND);
-//        }
-//        List<SimpleGrantedAuthority> authorities = getAuthorities(user.getRole().getAuthorities());
-//        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
-//    }
-//    private List<SimpleGrantedAuthority> getAuthorities(List<Privilege> authorities) {
-//        return authorities.stream()
-//                .map(authority -> new SimpleGrantedAuthority(authority.name()))
-//                .collect(Collectors.toList());
-//    }
-////    @Override
-////    @Transactional
-////    public UserResponseDto register(UserDto userDto) {
-////        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-////        User user = userMapper.userDtoToUser(userDto);
-////        log.info("user before saving --> {}", user);
-////        if (userRepository.findUserByEmail(user.getEmail()).isPresent()){
-////            throw new DronesApplicationException(DroneApplicationExceptionReason.USER_ALREADY_EXISTS_IN_DATABASE);
-////        }
-////        Role role = new Role();
-////        role.setRoleType(Type.USER);
-////        List<Privilege> authorities = new ArrayList<>();
-////        authorities.add(Privilege.LOAD_DRONE);
-////        role.setAuthorities(authorities);
-////        roleRepository.save(role);
-////        user.setRole(role);
-////        user = userRepository.save(user);
-////        return userMapper.userToUserResponseDto(user);
-////    }
-//}
+package com.ehizman.drones.service;
+
+import com.ehizman.drones.data.model.User;
+import com.ehizman.drones.data.model.enums.Role;
+import com.ehizman.drones.data.repository.UserRepository;
+import com.ehizman.drones.dto.UserRegistrationRequest;
+import com.ehizman.drones.dto.UserResponseDto;
+import com.ehizman.drones.dto.mapper.UserMapper;
+import com.ehizman.drones.exception.UserException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+@Slf4j
+@Service(value = "userService")
+public class UserServiceImpl implements UserService, UserDetailsService {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final NotificationService notificationService;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           UserMapper userMapper,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           NotificationService notificationService) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.notificationService = notificationService;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String email = username;
+        return loadAUserByEmail(email);
+    }
+
+    private UserDetails loadAUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(()->
+                    new UsernameNotFoundException(String.format("No user found with this email %s", email))
+                );
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
+    }
+
+    private Set<SimpleGrantedAuthority> getAuthorities(User user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        user.getRoles().forEach(
+                role -> {
+                    authorities.addAll(role.getGrantedAuthority());
+                }
+        );
+        return authorities;
+    }
+
+
+    @Override
+    public UserResponseDto registerUser(UserRegistrationRequest userRegistrationRequest) throws UserException {
+        if (findUserByEmail(userRegistrationRequest.getEmail())){
+            throw new UserException("User account already exists");
+        }
+        User user = userMapper.userDtoToUser(userRegistrationRequest);
+        log.info("User --> {}", user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.addRole(Role.USER);
+        notificationService.sendVerifyAccountMailTo(user.getEmail(), user.getFullName(), "token");
+        userRepository.save(user);
+        return userMapper.userToUserResponseDto(user);
+    }
+
+    private boolean findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
+}

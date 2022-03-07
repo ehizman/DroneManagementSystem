@@ -1,15 +1,13 @@
 package com.ehizman.drones.web.controller;
 
 import com.ehizman.drones.data.model.Drone;
-import com.ehizman.drones.data.model.Medication;
+import com.ehizman.drones.data.model.Package;
 import com.ehizman.drones.dto.DroneRegistrationDto;
 import com.ehizman.drones.dto.DroneResponseDto;
 import com.ehizman.drones.dto.MedicationRequestDto;
-import com.ehizman.drones.dto.MedicationResponseDto;
 import com.ehizman.drones.dto.mapper.MedicationMapper;
 import com.ehizman.drones.exceptions.DronesApplicationException;
 import com.ehizman.drones.service.DroneService;
-import com.ehizman.drones.service.MedicationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,8 +49,8 @@ public class DroneController {
         Drone drone =droneService.findDrone(serialNumber);
         log.info("Drone to load --> {}", drone);
         log.info("Medication --> {}", medicationRequestDto);
-        Medication medication = medicationMapper.medicationRequestDtoToMedication(medicationRequestDto);
-        droneService.load(medication, drone);
+        Package aPackage = medicationMapper.medicationRequestDtoToMedication(medicationRequestDto);
+        droneService.load(aPackage, drone);
         return new ResponseEntity<>("Drone loaded", HttpStatus.OK);
     }
 }

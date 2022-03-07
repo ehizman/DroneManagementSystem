@@ -1,6 +1,5 @@
 package com.ehizman.drones.data.repository;
 
-import com.ehizman.drones.data.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

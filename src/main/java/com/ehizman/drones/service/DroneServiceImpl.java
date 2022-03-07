@@ -1,17 +1,14 @@
 package com.ehizman.drones.service;
 
 import com.ehizman.drones.data.model.Drone;
-import com.ehizman.drones.data.model.Medication;
+import com.ehizman.drones.data.model.Package;
 import com.ehizman.drones.data.model.enums.State;
 import com.ehizman.drones.data.repository.DroneRepository;
 import com.ehizman.drones.dto.DroneRegistrationDto;
 import com.ehizman.drones.dto.DroneResponseDto;
-import com.ehizman.drones.dto.MedicationRequestDto;
 import com.ehizman.drones.dto.mapper.DroneMapper;
-import com.ehizman.drones.dto.mapper.MedicationMapper;
 import com.ehizman.drones.exceptions.DroneApplicationExceptionReason;
 import com.ehizman.drones.exceptions.DronesApplicationException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -51,12 +48,12 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public void load(Medication medication, Drone drone) {
-        if (medication.getWeight() > drone.getWeight()){
+    public void load(Package aPackage, Drone drone) {
+        if (aPackage.getWeight() > drone.getWeight()){
             throw new DronesApplicationException(DroneApplicationExceptionReason.DRONE_OVERLOAD);
         }
-        drone.setWeight(drone.getWeight()+medication.getWeight());
-        drone.addMedication(medication);
+        drone.setWeight(drone.getWeight()+ aPackage.getWeight());
+        drone.addMedication(aPackage);
         if (drone.getWeight() <= 500.0){
             drone.setState(State.LOADING);
         }

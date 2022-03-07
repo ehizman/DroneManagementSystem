@@ -2,12 +2,11 @@ package com.ehizman.drones.service;
 
 import com.ehizman.drones.DataConfig;
 import com.ehizman.drones.data.model.Drone;
-import com.ehizman.drones.data.model.Medication;
+import com.ehizman.drones.data.model.Package;
 import com.ehizman.drones.data.model.enums.Model;
 import com.ehizman.drones.data.model.enums.State;
 import com.ehizman.drones.data.repository.DroneRepository;
 import com.ehizman.drones.dto.DroneRegistrationDto;
-import com.ehizman.drones.dto.DroneResponseDto;
 import com.ehizman.drones.exceptions.DronesApplicationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,7 +87,7 @@ public class DroneServiceSpyTests {
     @Test
     @Rollback(value = false)
     void testCanLoadDroneWithMedication(){
-        Medication medication = Medication.builder()
+        Package aPackage = Package.builder()
                 .name("Panadol")
                 .code("PAN45678")
                 .image("image")
@@ -101,7 +100,7 @@ public class DroneServiceSpyTests {
                 .state(State.IDLE).build();
         droneService.register(drone);
         Drone returnedFromDb = droneRepositorySpy.findDroneBySerialNumber("1232567890");
-        droneService.load(medication, returnedFromDb);
+        droneService.load(aPackage, returnedFromDb);
         assertThat(returnedFromDb.getWeight()).isEqualTo(290.0);
         assertThat(returnedFromDb.getState()).isEqualTo(State.LOADING);
     }
